@@ -12,6 +12,8 @@ void run(MyFunc func, int **a, int **b, int**c, int rows){
 }
 
 
+//TODO:实现以下标计算的strassen 以及简单分治算法
+
 /*进行矩阵乘法的模拟运算,分别采用了普通的分治算法时间复杂度为   Θ(n**3)
  　 * 以及strassen算法时间复杂度为 Θ(lg7) */
 
