@@ -1,13 +1,16 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-#define LEFT(i) i<<1
-#define RIGHT(i) (i<<1) + 1
-#define PARENT(i) i>>1
-#define SWAP(a, b) a = a^b; b = a^b; a = a^b;
-#define DEBUG_LOG(module) fprintf(stderr, "[+]Debug: "#module"\n")
-#define ERROR_LOG(module) fprintf(stderr, "[+]Error: "#module"\n")
+#include "heap_base.h"
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <time.h>
+//
+//#define LEFT(i) i<<1
+//#define RIGHT(i) (i<<1) + 1
+//#define PARENT(i) i>>1
+//#define SWAP(a, b) do{ \
+//    a = a^b; b = a^b; a = a^b; \
+//}while(0);
+//#define DEBUG_LOG(module) fprintf(stderr, "[+]Debug: "#module"\n")
+//#define ERROR_LOG(module) fprintf(stderr, "[+]Error: "#module"\n")
 //#if !defined DEBUG_VERSION \
 //    printf("Final version\n")
 //#endif
