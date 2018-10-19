@@ -27,7 +27,6 @@
  * 3.heapfy(1) 重新构建为最大堆
  *
  * 使用宏定义的位操作符获取左右子*/
-void print(int*, int);
 
 void heapfy(int *data, int index, int heap_size){
     int left = LEFT(index);
@@ -79,7 +78,7 @@ int Random(int start, int end){
     seed += rand();
     return rand()%res;
 }
-
+/*
 int main(){
     int *data = (int*)malloc(sizeof(int)*9);
     for(int i =0;i<9;i++)
@@ -89,4 +88,4 @@ int main(){
     DEBUG_LOG(After heap_sort);
     print(data, 9);
     free(data);
-}
+}*/

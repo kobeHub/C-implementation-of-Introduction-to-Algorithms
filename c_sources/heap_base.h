@@ -16,6 +16,7 @@
 #define DEBUG_LOG(module) fprintf(stderr, "[+]Debug: "#module"\n")
 #define ERROR_LOG(module) fprintf(stderr, "[+]Error: "#module"\n")
 
+void print(int*, int);
 void heapfy(int *data, int index, int heap_size);
 void MaxHeap(int *data, int length);
 void heap_sort(int *data, int length);
