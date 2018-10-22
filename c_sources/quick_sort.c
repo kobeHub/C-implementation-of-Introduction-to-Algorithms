@@ -1,4 +1,6 @@
 #include "utils.h"
+#include <stack>
+
 
 /***************************************************************
  *Copyright (c) 2018 http://www.innohub.top/ All rights reserved
@@ -18,7 +20,7 @@ void print(int* data, int len){
     printf("None array\n");
 }
 
-typedef int (*Func) (int*, int, int);
+typedef void (*Func) (int*, int, int);
 
 /**************************************************************
  * Function: Partion
@@ -56,14 +58,64 @@ void quick_sort(int* data, int low, int high){
   }
 }
 
-int main(){
-  int* data = (int*)malloc(sizeof(int)*10);
+/**********************************************************
+ * None recursive solution of quick sort
+ * *********************************************************/
+void quick_sort_non(int* data, int low, int high){
+  if(low >= high)
+    printf("Array overflow\n");
+
+  // init the buffer
+  std::stack<int> buffer;
+  buffer.push(low);
+  buffer.push(high);
+
+  int left, right, mid;
+  while(!buffer.empty()){
+    right = buffer.top();
+    buffer.pop();
+    left = buffer.top();
+    buffer.pop();
+
+    mid = partion(data, left, right);
+    if(mid-1 > left){
+      // Push the left part array args into buffer
+      buffer.push(left);
+      buffer.push(mid-1);
+    }
+
+    if(mid+1 < right){
+      buffer.push(mid+1);
+      buffer.push(right);
+    }
+  }
+}
+
+void run(Func myFun, int* data, int low, int high){
+  double start, end;
+  start = clock();
+  myFun(data, low, high);
+  end = clock();
+  printf("Run time:%fs\n", (end-start)/CLOCKS_PER_SEC);
+}
+
+inline void init_data(int* data, int len){
   for(int i = 0;i < 10;i++)
     data[i] = Random_int(0, 100);
+}
+
+int main(){
+  int* data = (int*)malloc(sizeof(int)*10);
   LOG("The initial array:");
+  init_data(data, 10);
   print(data, 10);
-  quick_sort(data, 0, 9);
-  LOG("After quick sort:");
+  LOG("Using recursive quick sort:");
+  run(quick_sort, data, 0, 9);
+  print(data, 10);
+  init_data(data, 10);
+  LOG("Using none recursive:");
+  print(data, 10);
+  run(quick_sort_non, data, 0, 9);
   print(data, 10);
   free(data);
 }
