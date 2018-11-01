@@ -6,7 +6,7 @@
  *Copyright (c) 2018 http://www.innohub.top All rights reserved
  *Auther: Inno Jia
  *Date: 2018-09-13
- *Decription: 最大堆实现的最大优先队列
+ *Description: 最大堆实现的最大优先队列
  *            最大堆是一种用来维护一组元素的集合的数据结构，
  *            其中每个元素都有一个对应的值，即关键字(key)
  *一个最大优先队列支持以下操作:
