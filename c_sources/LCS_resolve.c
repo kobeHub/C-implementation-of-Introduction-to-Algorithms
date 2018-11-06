@@ -16,15 +16,20 @@
  *             (3) m = 0 | n = 0 ; c{m, n} = 0
  ****************************************************************/
 
+
+//---------------------------------------------------------------
+// The global vars to record the path and length
+//---------------------------------------------------------------
 typedef enum{left, up, add}direction;
 int** record;
 direction** path;
 
+
+//---------------------------------------------------------------
+// Initialize the basic array and fill the matrix record, path
+// according to the rule above. Return the LCS length
+//---------------------------------------------------------------
 int lcs_resolve(char* data_a, char* data_b, int len_a, int len_b) {
-  //int len_a = strlen(data_a);
-  //int len_b = strlen(data_b);
-  //LOG("a_len:%d, b_len:%d", len_a, len_b);
-  // init the extra vars
   record = (int**)malloc(sizeof(int*)*(len_a+1));
   for(int i = 0; i <= len_a; i++)
     record[i] = (int*)malloc(sizeof(int)*(len_b+1));
@@ -55,6 +60,7 @@ int lcs_resolve(char* data_a, char* data_b, int len_a, int len_b) {
 
   return record[len_a][len_b];
 }
+
 
 void destory(int len_a) {
   for(int p = 0; p <= len_a; p++) {
@@ -90,14 +96,17 @@ void printLCS(char* data, int len_a, int len_b) {
   printf("\n");
 }
 
+//----------------------------------------------------------
+// eval one time
+//----------------------------------------------------------
 void show_one(char* str1, char* str2) {
   int len_a = strlen(str1);
   int len_b = strlen(str2);
   int len = lcs_resolve(str1, str2, len_a, len_b);
-  LOG("[+]String to be compared: %s   %s", str1, str2);
+  printf("[+]String to be compared: %s   %s", str1, str2);
+  printf("\n[+]Common subsequence:");
   printLCS(str1, len_a, len_b);
-  LOG("[+]The LCS: %d\n\n", len);
-  //destory(len_a);
+  printf("[+]The LCS: %d\n\n", len);
 }
 
 int main() {
