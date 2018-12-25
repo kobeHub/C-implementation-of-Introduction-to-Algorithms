@@ -101,8 +101,8 @@ void Graph::setVertex(Vertex v, int index) {
 void Graph::reset() {
   for(int i = 0; i < num_vertexs; i++) {
     vertexs[i].color = white;
-    vertexs[i].d = INT_MAX;
-    vertexs[i].pre = '0';
+    vertexs[i].d = INT_MAX - 1000;
+    vertexs[i].pre = '*';
   }
 }
 
@@ -134,9 +134,7 @@ void Graph::sortEdges() {
 int Graph::get_weights(char a, char b) {
   for(int i = 0; i < num_edges; i++) {
     Edge cur = edges[i];
-    if(a == cur.a && b == cur.b)
-      return cur.weight;
-    else if(a == cur.b && b == cur.a)
+    if((cur.a==a&&cur.b==b) || (cur.a==b&&cur.b==a))
       return cur.weight;
   }
   return INT_MAX;

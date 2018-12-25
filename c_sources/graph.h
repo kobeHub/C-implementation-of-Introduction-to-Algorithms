@@ -22,6 +22,14 @@ typedef struct Vertex{
   friend bool operator<(const Vertex &a, const Vertex &b) {
     return a.d > b.d;
   }
+
+  bool operator==(const Vertex &ano) {
+    return (name == ano.name);
+  }
+
+  bool operator!=(const Vertex &ano) {
+    return (name != ano.name);
+  }
 }Vertex;
 
 typedef struct Edge{
@@ -30,7 +38,7 @@ typedef struct Edge{
   int weight;
 
   bool operator==(const Edge &ano)  const{
-    return (a == ano.a && b == ano.b);
+    return ((a == ano.a && b == ano.b)||(a == ano.b && b == ano.a));
   }
 
   bool operator<(const Edge &ano) const {
@@ -42,6 +50,8 @@ typedef struct Edge{
     b = ano.b;
     weight = ano.weight;
   }
+
+
 }Edge;
 
 
