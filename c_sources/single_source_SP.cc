@@ -1,7 +1,7 @@
 #include "graph.h"
 #include <string.h>
 #include "pri_queue.h"
-#include <set>
+#include <vector>
 #include <stack>
 
 #define MAX (INT_MAX - 1000)    // Avoiding the overflow
@@ -23,25 +23,10 @@
 //      the weights of the shortest path from s.
 //      Just record the previous vertex and update vertex weights
 //
-//      With 2 version Relax:
+//
+//      With Relax:
 //          -- for BF and an edge provided
-//          -- for Dijkstra without edge
 //******************************************************************
-Vertex Relax(Graph *graph, Vertex u, Vertex v) {
-  int weight = graph->get_weights(u.name, v.name);
-  if (u.d + weight < v.d) {
-    v.d = u.d + weight;
-    v.pre = u.name;
-    //graph->setVertex(v, graph->get_vertex_index(v.name));
-  }// else if (v.d + weight < u.d) {
-   // u.d = v.d + weight;
-    //u.pre = v.name;
-    //graph->setVertex(u, graph->get_vertex_index(u.name));
-    //return u;
-
-    //}
-  return v;
-}
 
 void Relax(Graph *graph, Vertex u, Vertex v, Edge e) {
   if (u.d + e.weight < v.d) {
@@ -106,22 +91,22 @@ bool BF(Graph *graph) {
 void print_(char r) {
   switch(r){
     case 'A':
-      printf("10->");
+      printf("10");
       break;
     case 'B':
-      printf("11->");
+      printf("11");
       break;
     case 'C':
-      printf("12->");
+      printf("12");
       break;
     case 'D':
-      printf("13->");
+      printf("13");
       break;
     case 'E':
-      printf("14->");
+      printf("14");
       break;
     default:
-      printf("%c->", r);
+      printf("%c", r);
       break;
   }
 }
@@ -154,6 +139,7 @@ void eval_BF(Graph *graph, Vertex source) {
           now = output.top();
           output.pop();
           print_(now.name);
+          printf("->");
         }
       } else {
         printf("To vertex %c itself:", source.name);
@@ -167,18 +153,23 @@ void eval_BF(Graph *graph, Vertex source) {
 
 
 //********************************************************************
+// Dijkstra(Graph *, Vertex):
+//        Use a priority queue to store all the vertexes and each
+//        iteration extract the minimum d vertex, and do relax for its
+//        every adjacency vertex
 //
+//        output use a stack also can use recursive
 //********************************************************************
 void Dijkstra(Graph *graph, Vertex source) {
-  set<Vertex> path;
+  vector<Vertex> path;
   pri_queue<Vertex> vertexes;
 
   Vertex curr, adj;
-  //for(int i = 0; i < graph->get_vertexs_num(); i++) {
-  //  curr = graph->get_vertex(i);
-  //  vertexes.push(curr);
-  //}
-  vertexes.push(source);
+  for(int i = 0; i < graph->get_vertexs_num(); i++) {
+    curr = graph->get_vertex(i);
+    vertexes.push(curr);
+  }
+  //vertexes.push(source);
 
   char *adjacency_list;
   while(!vertexes.empty()) {
@@ -186,32 +177,36 @@ void Dijkstra(Graph *graph, Vertex source) {
     curr.color = black;
     graph->setVertex(curr, graph->get_vertex_index(curr.name));
     vertexes.pop();
-    path.insert(curr);
+    path.push_back(curr);
 
     adjacency_list = graph->get_adjacency_list(curr);
+    int weight;
     for (unsigned int i = 0; i < strlen(adjacency_list); i++) {
-      adj = graph->get_vertex(adjacency_list[i]);
+      adj = vertexes.get(adjacency_list[i]);
       if (adj.color != black) {
-        if (vertexes.find(adj)) {
+        // The vertex adj is in the queue
+        weight = curr.d + graph->get_weights(curr.name, adjacency_list[i]);
+        if (weight < adj.d) {
+          adj.d = weight;
+          adj.pre = curr.name;
           vertexes.remove(adj);
+          vertexes.push(adj);
         }
-        //vertexes.remove(adj);
-        adj.color = gray;
-        adj = Relax(graph, curr, adj);
-        //graph->setVertex()
-        vertexes.push(adj);
       }
     }
   }
   printf("Dijkstra algorithm\n");
   printf("The single shortest path from %c to every vertex:\n", source.name);
   //Vertex curr;
-  set<Vertex>::iterator it;
+  vector<Vertex>::iterator it;
   for (it = path.begin(); it != path.end(); it++) {
       stack<Vertex> output;
       curr = *it;
       if (curr != source) {
-        printf("To vertex %c: %c->", curr.name, source.name);
+        //printf("To vertex %c: %c->", print_(curr.name), source.name);
+        printf("To vertex ");
+        print_(curr.name);
+        printf(": %c->", source.name);
 
         while (curr != source) {
           // The output should include all vertexes except source vertex
@@ -223,48 +218,12 @@ void Dijkstra(Graph *graph, Vertex source) {
           curr = output.top();
           output.pop();
           print_(curr.name);
+          printf("->");
         }
-        printf("   Path length:%d \n", curr.d);
       } else {
-        printf("There is no single shortest path from vertex %c in graph\n", source.name);
+        printf("To vertex %c itself", source.name);
       }
-
-    }
-}
-
-
-//-----------------------------------------------------------------------------
-//
-//-----------------------------------------------------------------------------
-void eval_dijkstra(Graph *graph, Vertex source) {
-    printf("Dijkstra algorithm\n");
-    printf("The single shortest path from %c to every vertex:\n", source.name);
-    Vertex curr;
-    for (int i = 0; i < graph->get_vertexs_num(); i++) {
-      stack<Vertex> output;
-      curr = graph->get_vertex(i);
-      if (curr != source) {
-        printf("To vertex %c: %c->", curr.name, source.name);
-
-        int i = 0;
-        while (curr != source) {
-          // The output should include all vertexes except source vertex
-          output.push(curr);
-          i++;
-          printf("%c->", curr.name);
-          curr = graph->get_vertex(curr.pre);
-          if (i > 15)
-            break;
-        }
-        /*
-        while(!output.empty()) {
-          curr = output.top();
-          output.pop();
-          printf("%c->", curr.name);
-        }*/
-        printf("\n");
-      }
-
+      printf("   Path length:%d \n", curr.d);
     }
 
 }
