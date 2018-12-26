@@ -52,7 +52,6 @@ int **extend_shortest_path(int **data_l, int **data_r, int **pre, int n) {
   for (int i = 1; i <= n; i++) {
     for (int j = 1; j <= n; j++) {
       data_l1[i-1][j-1] = MAX;
-      //previous[i-1][j-1] = NIL;
       for (int k = 1; k <= n; k++) {
         int weight;
         if((data_l[i-1][k-1]==MAX) || (data_r[k-1][j-1]==MAX))
@@ -61,16 +60,8 @@ int **extend_shortest_path(int **data_l, int **data_r, int **pre, int n) {
           weight = data_l[i-1][k-1] + data_r[k-1][j-1];
         if (weight < data_l1[i-1][j-1]) {
           // Can find shorter path record the pre path to matrix pre
-          if (i != j) {
-            if (i == 1)
-              pre[i-1][j-1] = k;
-            else
-              pre[i-1][j-1] = pre[k-1][j-1];
-          }
+          pre[i-1][j-1] = pre[k-1][j-1];
           data_l1[i-1][j-1] = weight;
-        } else {
-         // if (i!=j)
-
         }
       }
     }
@@ -79,45 +70,27 @@ int **extend_shortest_path(int **data_l, int **data_r, int **pre, int n) {
   return data_l1;
 }
 
+
+//--------------------------------------------------------------------------
+// faster_all_pairs_shortest_paths():
+//          compute all pairs shortest path with dynamic programming
+//          l_2m was computed by l_m, which is faster than the common method
+//--------------------------------------------------------------------------
 int **faster_all_pairs_shortest_paths(int **data, int **pre, int rows) {
   int m = 1;
   int **data_l1m = Init(rows);
   data_l1m = data;
   while (m < rows-1) {
     //data_l2m = Initialize(rows);
-    data_l1m = extend_shortest_path(data_l1m, data, pre, rows);
-    m = m + 1;
+    data_l1m = extend_shortest_path(data_l1m, data_l1m, pre, rows);
+    m = m * 2;
   }
   return data_l1m;
 }
 
-/*
-static int stack[200];
-static int count = 0;
-void print_(int **pre, int i, int j, int *times) {
-  if (*times == 0) {
-    stack[0] = i;
-    count++;
-  }
-  (*times)++;
-  if (i == j) {
-    printf("The shortest path from %d to %d:\t", i, stack[0]);
-    printf("%d->", i);
-    while (count) {
-      printf("%d->", stack[count]);
-      count--;
-    }
-    printf("%d", stack[0]);
-  }
-  else if (pre[i-1][j-1] == NIL)
-    printf("There is no path from %d to %d\n", i, j);
-  else {
-    stack[count] = pre[i-1][j-1];
-    count++;
-    print_(pre, i, pre[i-1][j-1], times);
-  }
-}*/
-
+//----------------------------------------------------------------------
+// Print shortest path according to previous matrix
+//----------------------------------------------------------------------
 void print_path(int **pre, int i, int j) {
   if (i == j) {
     printf("%d->", i);
@@ -129,6 +102,10 @@ void print_path(int **pre, int i, int j) {
   }
 }
 
+
+//--------------------------------------------------------------------
+// Print a matrix for debug
+//--------------------------------------------------------------------
 void print_matrix(int **data, int n) {
   for (int i = 0; i < n; i++){
     for (int j = 0; j < n; j++)
@@ -141,7 +118,15 @@ void print_matrix(int **data, int n) {
 
 //-------------------------------------------------------------------
 // FloydWarshall:
+//          compute_floyd_K():
+//              compute the kth iteration matrix and path matrix
+//              Output: The kth matrix
 //
+//          FloydWarshall():
+//              compute all the k times iteration matrix and output
+//              the nth matrix which contains all pairs shortest
+//              path distance and the previous path record in the pre
+//              matrix
 //-------------------------------------------------------------------
 int **compute_floyd_K(int **data_k_1, int **pre, int rows, int k) {
   int **data_k = Init(rows);
@@ -168,11 +153,13 @@ int **FloydWarshall(int **data, int **pre, int rows) {
   data_k = data;
   for (int k = 1; k <= rows; k++) {
     data_k = compute_floyd_K(data_k, pre, rows, k);
-  }
+  }ta
   return data_k;
 }
 
-// To test 2 algorithm initialize data
+//-------------------------------------------------------------------
+//To test 2 algorithm initialize data
+//-------------------------------------------------------------------
 void Init_test(int **graph, int **pre, int g[][6], int p[][6]) {
   for (int i = 0; i < 6; i++)
     for (int j = 0; j < 6; j++) {
@@ -181,6 +168,9 @@ void Init_test(int **graph, int **pre, int g[][6], int p[][6]) {
     }
 }
 
+//--------------------------------------------------------------------
+// show all the pairs shortest path and distance
+//--------------------------------------------------------------------
 void show(int **result, int **pre) {
   for (int i = 1; i <= 6; i++) {
     for (int j = i + 1; j <= 6; j++) {
@@ -231,6 +221,7 @@ int main () {
   print_matrix(result, 6);
   printf("The previous path matrix:\n");
   print_matrix(pre, 6);
+  show(result, pre);
   printf("\n");
 
   printf("Use the FloydWarshall algorithm:\n");
