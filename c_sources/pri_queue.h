@@ -33,8 +33,10 @@ class pri_queue : public std::priority_queue<T, std::vector<T>>
 {
     public:
 
-      bool find(const T& val) {
-        return (this->c.end() != (std::find(this->c.begin(), this->c.end(), val)));
+      auto find(const T& val) {
+        auto it = std::find(this->c.begin(), this->c.end(), val);
+        if (it != this->c.end())
+          return *it;
       }
     bool remove(const T& value) {
     auto it = std::find(this->c.begin(), this->c.end(), value);
@@ -44,6 +46,14 @@ class pri_queue : public std::priority_queue<T, std::vector<T>>
       return true;
     } else {
         return false;
+      }
+    }
+
+    auto get(const char& name) {
+      for (auto it = this->c.begin(); it != this->c.end(); it++) {
+        if ((*it).name == name) {
+          return *it;
+        }
       }
     }
 
