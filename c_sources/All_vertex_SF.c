@@ -17,8 +17,8 @@
  *
  *              Another is Floyd-Warshall with time complexion of
  *              θ(V**3)
- * Compile:
- * Usage:
+ * Compile:     gcc All_vertex_SF.c -o all
+ * Usage:       ./all
  *******************************************************************/
 
 int ** Init(int n){
@@ -153,7 +153,7 @@ int **FloydWarshall(int **data, int **pre, int rows) {
   data_k = data;
   for (int k = 1; k <= rows; k++) {
     data_k = compute_floyd_K(data_k, pre, rows, k);
-  }ta
+  }
   return data_k;
 }
 
