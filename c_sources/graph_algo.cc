@@ -259,4 +259,5 @@ int main() {
   printf("\nThe MST of Kruskal\n");
   graph->reset(weights);
   Kruskal(graph);
+
 }
