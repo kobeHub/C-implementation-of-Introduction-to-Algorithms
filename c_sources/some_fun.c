@@ -39,8 +39,29 @@ float run(Myfun func, int num){
     return res;
 }
 
+
+// Binary search to compute sqrt
+int sqrt_b(int value) {
+  long long i = 0;
+  long long j = value / 2 + 1;
+  while (i <= j) {
+    long long mid = (i + j) / 2;
+    long long cul = mid * mid;
+    if (cul == value)
+      return mid;
+    else if (cul < value)
+      i = mid + 1;
+    else
+      j = mid -1;
+  }
+  return j;
+}
+
 int main(){
     float a = run(q_rsqrt_unique, 16.0);
     float b = run(q_rsqrt_normal, 16.0);
     printf("reciprocal of the sqrt(%f): %f %f\n", 16.0, a, b);
+
+    printf("Use binary search to compute sqrt:\n");
+    printf("Test for int: 25, %d\n", sqrt_b(25));
 }
