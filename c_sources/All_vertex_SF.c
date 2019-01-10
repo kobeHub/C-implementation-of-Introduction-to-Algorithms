@@ -49,11 +49,10 @@ void free_(int **data, int n) {
 //-------------------------------------------------------------------------
 int **extend_shortest_path(int **data_l, int **data_r, int **pre, int n) {
   int **data_l1 = Init(n);
+  int weight;
   for (int i = 1; i <= n; i++) {
     for (int j = 1; j <= n; j++) {
-      data_l1[i-1][j-1] = MAX;
       for (int k = 1; k <= n; k++) {
-        int weight;
         if((data_l[i-1][k-1]==MAX) || (data_r[k-1][j-1]==MAX))
           weight = MAX;    // Avoid to over flow
         else
